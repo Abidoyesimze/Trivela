@@ -13,6 +13,7 @@ import securityHeaders from './middleware/securityHeaders.js';
 import { paginateItems } from './pagination.js';
 import { checkSorobanRpcHealth } from './sorobanRpc.js';
 import { resolveStellarNetworkConfig } from './config/stellarNetwork.js';
+import { validateBackendEnv } from './config/envValidation.js';
 import { createDal } from './dal/index.js';
 import { createJobRunner } from './jobs/jobRunner.js';
 
@@ -204,7 +205,7 @@ export function createApp(options = {}) {
     requestErrors: 0,
     routeHits: new Map(),
   };
-  const requireApiKey = createApiKeyAuth({ apiKey });
+  const requireApiKey = createApiKeyAuth({ apiKeys });
   const rateLimiter = createRateLimiter({
     windowMs: rateLimitWindowMs,
     maxRequests: rateLimitMaxRequests,
@@ -559,6 +560,10 @@ export function createApp(options = {}) {
 }
 
 export function startServer(options = {}) {
+  if (!options.skipEnvValidation) {
+    validateBackendEnv(process.env);
+  }
+
   const app = createApp(options);
   const port = options.port ?? process.env.PORT ?? DEFAULT_PORT;
 
