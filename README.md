@@ -4,7 +4,7 @@
 
 ---
 
-## What Trivela Does
+## What Trivela Does?
 
 - **Campaigns** – Create and manage reward campaigns with on-chain configuration (Soroban).
 - **Rewards contract** – Tracks user points, credits (by admin/campaign), and claims.
