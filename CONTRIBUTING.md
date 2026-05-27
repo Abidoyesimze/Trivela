@@ -1,5 +1,7 @@
 # Contributing to Trivela
 
+> 💡 **Stuck on setup?** The [FAQ](docs/FAQ.md) covers the most common issues — Freighter detection, RPC errors, SQLite locks, and more. Check it first before opening an issue.
+
 Thank you for considering contributing to Trivela. This project is part of the [Stellar Wave on Drips](https://www.drips.network/wave/stellar) and we welcome contributions across **backend**, **frontend**, and **smart contracts**.
 
 ## How to contribute
