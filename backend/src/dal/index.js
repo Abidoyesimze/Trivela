@@ -8,6 +8,7 @@ import { WebhookRepository } from './webhookRepository.js';
 import { createSqliteReferralRepository } from './sqliteReferralRepository.js';
 import { assertApiKeyRepository } from './apiKeyRepository.js';
 import { createSqliteApiKeyRepository } from './sqliteApiKeyRepository.js';
+import { createSqliteFailedJobRepository } from './sqliteFailedJobRepository.js';
 
 export async function createDal({
   dbPath = ':memory:',
@@ -16,6 +17,7 @@ export async function createDal({
   auditLogRepository,
   webhookRepository,
   apiKeyRepository,
+  failedJobRepository,
   allowedCategories,
 } = {}) {
   const db = new Database(dbPath);
@@ -42,6 +44,7 @@ export async function createDal({
     apiKeys: assertApiKeyRepository(
       apiKeyRepository ?? createSqliteApiKeyRepository({ db }),
     ),
+    failedJobs: failedJobRepository ?? createSqliteFailedJobRepository({ db }),
     db,
   };
 }
