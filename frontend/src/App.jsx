@@ -19,6 +19,9 @@ import {
   normalizeError,
 } from './stellar';
 import { logSafeEvent } from './lib/safeAnalytics';
+import EmbedCampaignCard from './EmbedCampaignCard.jsx';
+import OnboardingTour from './components/OnboardingTour.jsx';
+import { useTour } from './hooks/useTour.js';
 
 export default function App() {
   const [theme, setTheme] = useState(() => getPreferredTheme());
@@ -30,6 +33,7 @@ export default function App() {
   const [isWalletBalanceLoading, setIsWalletBalanceLoading] = useState(false);
   const [isRewardsPointsLoading, setIsRewardsPointsLoading] = useState(false);
   const [walletError, setWalletError] = useState('');
+  const { shouldShow: showTour, markComplete: completeTour, restartTour } = useTour();
 
   useEffect(() => {
     applyTheme(theme);
@@ -257,7 +261,9 @@ export default function App() {
           />
         }
       />
-      </Routes>
+        <Route path="/embed/campaign/:id" element={<EmbedCampaignCard id={undefined} />} />
+    </Routes>
+    {showTour && <OnboardingTour onComplete={completeTour} />}
     </>
       {/* #295 — Per-wallet transaction history. Renders empty / loading
           / error states inline so the page never depends on the caller
@@ -279,6 +285,8 @@ export default function App() {
           />
         }
       />
+      <Route path="/embed/campaign/:id" element={<EmbedCampaignCard id={undefined} />} />
     </Routes>
+    {showTour && <OnboardingTour onComplete={completeTour} />}
   );
 }
