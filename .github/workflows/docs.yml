@@ -1,0 +1,68 @@
+name: Deploy Contract API Docs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo registry and target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-docs-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-docs-
+
+      - name: Check for missing documentation on public items
+        run: cargo doc --package trivela-campaign-contract --package trivela-rewards-contract --no-deps --document-private-items 2>&1 | tee cargo-doc-output.txt; if grep -q "warning: missing documentation for" cargo-doc-output.txt; then echo "Missing documentation found!"; grep "warning: missing documentation for" cargo-doc-output.txt; exit 1; fi
+
+      - name: Generate docs with cargo doc
+        run: cargo doc --package trivela-campaign-contract --package trivela-rewards-contract --no-deps
+
+      - name: Copy docs to docs/contract-api
+        run: |
+          rm -rf docs/contract-api
+          cp -r target/doc docs/contract-api
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/contract-api
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

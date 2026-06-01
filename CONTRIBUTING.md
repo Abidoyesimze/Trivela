@@ -24,7 +24,7 @@ Thank you for considering contributing to Trivela. This project is part of the [
 
 ## Setup for development
 
-- **Contracts**: Rust + Stellar CLI. From repo root: `cargo test --workspace` and `stellar contract build` in each contract dir.
+- **Contracts**: See [contracts/CONTRIBUTING.md](contracts/CONTRIBUTING.md) for detailed setup, coding standards, testing patterns, and common pitfalls.
 - **Contract Bindings**: To regenerate type-safe TypeScript bindings from contract WASM artifacts, run `npm run contracts:build-bindings` from the repository root. Ensure you regenerate the bindings and commit the updated files whenever contract interfaces change.
 - **Backend**: `cd backend && npm install && npm run dev`
 - **Frontend**: `cd frontend && npm install && npm run dev`

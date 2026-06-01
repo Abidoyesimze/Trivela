@@ -5,6 +5,9 @@ info:
   description: |
     REST API for the Trivela campaign and rewards platform. Handles campaign metadata,
     health checks, and Soroban RPC configuration for the frontend.
+
+    See the [API Migration Guide](../docs/API_MIGRATION.md) for v0 → v1 breaking changes,
+    endpoint changelog, deprecation policy, and migration examples with curl snippets.
   license:
     name: Apache-2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html

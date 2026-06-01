@@ -40,6 +40,9 @@ jobs:
       - name: Run contract tests
         run: cargo test --workspace
 
+      - name: Check public documentation completeness
+        run: cargo doc --document-private-items --no-deps 2>&1 | tee /tmp/cargo-doc-check.txt; if grep -q "warning: missing documentation for" /tmp/cargo-doc-check.txt; then echo "❌ Missing documentation on public items:"; grep "warning: missing documentation for" /tmp/cargo-doc-check.txt; exit 1; else echo "✅ All public items documented"; fi
+
       - name: Run integration tests
         run: cargo test --package integration
 

@@ -1144,3 +1144,47 @@ test('API response compression is NOT applied to payloads smaller than 1KB', asy
   }
 });
 
+// #493 — API migration compatibility shim
+test('?api_version=v0 compatibility shim rewrites v1 routes to legacy patterns', async () => {
+  const { server, baseUrl } = await startTestServer();
+
+  try {
+    const response = await fetch(`${baseUrl}/api/v1/campaigns?api_version=v0`);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('deprecation'), 'true');
+    assert.equal(response.headers.get('sunset'), 'Sat, 01 Jul 2026 00:00:00 GMT');
+  } finally {
+    await stopTestServer(server);
+  }
+});
+
+test('?api_version=v0 compatibility shim returns Deprecation header on create', async () => {
+  const { server, baseUrl } = await startTestServer();
+
+  try {
+    const response = await fetch(`${baseUrl}/api/v1/campaigns?api_version=v0`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Compat Test', rewardPerAction: 10 }),
+    });
+    assert.equal(response.status, 201);
+    assert.equal(response.headers.get('deprecation'), 'true');
+    const body = await response.json();
+    assert.equal(body.name, 'Compat Test');
+  } finally {
+    await stopTestServer(server);
+  }
+});
+
+test('requests without api_version=v0 do not include Deprecation header', async () => {
+  const { server, baseUrl } = await startTestServer();
+
+  try {
+    const response = await fetch(`${baseUrl}/api/v1/campaigns`);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('deprecation'), null);
+  } finally {
+    await stopTestServer(server);
+  }
+});
+

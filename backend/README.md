@@ -9,6 +9,10 @@ The complete API specification is available in [OpenAPI 3.1 format](./openapi.ya
 - [Redoc](https://redocly.github.io/redoc/) - for a clean documentation view
 - Any OpenAPI-compatible tool
 
+### Migration Guide
+
+See the [API Migration Guide](../docs/API_MIGRATION.md) for details on v0 → v1 breaking changes, endpoint changelog, deprecation policy, and migration examples with curl snippets.
+
 ## Setup
 
 ```bash

@@ -238,6 +238,21 @@ export async function createApp(options = {}) {
     routeHits: new Map(),
   };
 
+  /**
+   * Compatibility shim: ?api_version=v0 rewrites v1 routes to legacy patterns
+   * and adds a Deprecation header. This is a temporary bridge for integrators
+   * during the 90-day migration window (see docs/API_MIGRATION.md).
+   */
+  app.use((req, res, next) => {
+    if (req.query.api_version === 'v0') {
+      // Rewrite /api/v1/* → /api/* for route matching
+      req.url = req.url.replace(/^\/api\/v1/, '/api');
+      res.setHeader('Deprecation', 'true');
+      res.setHeader('Sunset', 'Sat, 01 Jul 2026 00:00:00 GMT');
+    }
+    next();
+  });
+
   const requireApiKey = createApiKeyAuth({
     apiKeys: /** @type {string} */ (options.apiKeys) ?? /** @type {string} */ (options.apiKey) ?? process.env.TRIVELA_API_KEYS ?? process.env.TRIVELA_API_KEY ?? '',
     apiKeyRepository: options.apiKeyRepository ?? apiKeyRepository,
