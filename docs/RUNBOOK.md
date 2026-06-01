@@ -7,6 +7,25 @@ Use this procedure when:
 - The automatic rollback in `deploy-blue-green.sh` did not trigger
 - You need to roll back a Kubernetes rolling update
 
+### When to roll back
+
+Roll back when any of the following occur after switching traffic to green:
+
+- `GET /health` on the green container returns a non-200 status.
+- Error rate in green logs exceeds zero within the 30-second verification window.
+- Manual monitoring detects elevated error rates or latency after the switch.
+- The automated `deploy-blue-green.sh` script exits with a non-zero status.
+
+### Automated rollback
+
+The deployment script performs an automatic rollback on failure. No manual
+intervention is needed if the script is still running. The script will:
+
+1. Rewrite the nginx upstream to point back to blue.
+2. Reload nginx (`nginx -s reload`).
+3. Stop the green container.
+4. Exit with status 1 and print the failure reason.
+
 ### Step 1 — Identify the active slot
 
 ```bash
@@ -119,6 +138,30 @@ journalctl -u nginx --since "5 minutes ago"
 ```
 
 Fix the upstream config syntax and retry `nginx -s reload`.
+
+---
+
+## Rate Limit Incidents
+
+If the API returns 429 responses unexpectedly:
+
+1. Check current Redis state (if Redis is enabled):
+   ```bash
+   docker compose exec redis redis-cli info stats | grep keyspace
+   ```
+2. Adjust `RATE_LIMIT_MAX_REQUESTS` and `RATE_LIMIT_WINDOW_MS` in the
+   environment and restart the backend.
+3. For immediate relief, restart the backend container to flush the in-memory
+   limiter (only effective when Redis is not in use).
+
+## Database Migration Failures
+
+If `npm run db:migrate` fails during deployment:
+
+1. Restore from the most recent database snapshot before attempting the migration again.
+2. Review the failing migration file in `backend/src/db/migrations/`.
+3. If using PostgreSQL, connect with `psql` and inspect the migration state table.
+4. Do **not** delete migration files — mark them as rolled back in the state table if needed.
 
 ---
 
