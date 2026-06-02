@@ -356,6 +356,47 @@ export function createSqliteCampaignRepository({
     return info.changes > 0;
   }
 
+  function clone(id, overrides = {}) {
+    const source = getById(id);
+    if (!source) {
+      return undefined;
+    }
+
+    const clonedName = overrides.name !== undefined ? overrides.name : `Copy of ${source.name}`;
+    const clonedSlug = overrides.slug !== undefined ? overrides.slug : generateSlug(clonedName);
+    const clonedDescription = overrides.description !== undefined ? overrides.description : source.description;
+    const clonedRewardPerAction = overrides.rewardPerAction !== undefined ? overrides.rewardPerAction : source.rewardPerAction;
+    const clonedCategory = overrides.category !== undefined ? overrides.category : (source.category || null);
+    const clonedImageUrl = overrides.imageUrl !== undefined ? overrides.imageUrl : (source.imageUrl || null);
+    const clonedTags = overrides.tags !== undefined ? overrides.tags : (source.tags || null);
+
+    const createdAt = new Date().toISOString();
+    const info = db
+      .prepare(
+        'INSERT INTO campaigns (name, slug, description, active, reward_per_action, start_date, end_date, featured, hidden, hidden_reason, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      )
+      .run(
+        clonedName,
+        clonedSlug,
+        clonedDescription,
+        0, // status: draft (active = false)
+        clonedRewardPerAction,
+        null, // startDate not copied
+        null, // endDate not copied
+        0, // featured = false
+        source.hidden ? 1 : 0,
+        source.hiddenReason,
+        createdAt,
+        createdAt
+      );
+
+    const newCampaign = getById(info.lastInsertRowid);
+    if (newCampaign) {
+      newCampaign.clonedFrom = source.id;
+    }
+    return newCampaign;
+  }
+
   return {
     list,
     listCategories,
@@ -365,6 +406,7 @@ export function createSqliteCampaignRepository({
     create,
     update,
     delete: remove,
+    clone,
     ftsAvailable,
   };
 }

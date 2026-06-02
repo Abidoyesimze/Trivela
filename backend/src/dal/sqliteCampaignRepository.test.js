@@ -328,6 +328,7 @@ test('list includeHidden option exposes hidden campaigns', async () => {
   assert.equal(repository.list({ includeHidden: true }).length, 2);
 });
 
+<<<<<<< HEAD
 // #333 — FTS5 search
 test('FTS search supports prefix matching and ranks relevant results first', async () => {
   const repository = await setupTestRepository();
@@ -421,5 +422,74 @@ test('listCategories and listTags return frequency counts', async () => {
   const tags = repository.listTags();
   assert.ok(tags.some((t) => t.name === 'defi' && t.count === 2));
   assert.ok(tags.length <= 50);
+});
+
+// #458 — clone campaign functionality
+test('clone creates a new campaign with copied metadata', async () => {
+  const repository = await setupTestRepository();
+
+  const original = repository.create({
+    name: 'Weekly Challenge',
+    description: 'Complete tasks to earn rewards',
+    rewardPerAction: 50,
+    active: true,
+    featured: true,
+  });
+
+  const cloned = repository.clone(original.id);
+
+  assert.ok(cloned);
+  assert.notEqual(cloned.id, original.id);
+  assert.equal(cloned.name, `Copy of ${original.name}`);
+  assert.equal(cloned.description, original.description);
+  assert.equal(cloned.rewardPerAction, original.rewardPerAction);
+  assert.equal(cloned.active, false); // cloned campaigns are draft
+  assert.equal(cloned.startDate, null); // dates not copied
+  assert.equal(cloned.endDate, null);
+  assert.equal(cloned.clonedFrom, original.id);
+});
+
+test('clone with overrides applies custom values', async () => {
+  const repository = await setupTestRepository();
+
+  const original = repository.create({
+    name: 'Original Campaign',
+    description: 'Original description',
+    rewardPerAction: 100,
+  });
+
+  const cloned = repository.clone(original.id, {
+    name: 'Custom Name',
+    description: 'Custom description',
+  });
+
+  assert.ok(cloned);
+  assert.equal(cloned.name, 'Custom Name');
+  assert.equal(cloned.description, 'Custom description');
+  assert.equal(cloned.rewardPerAction, original.rewardPerAction); // not overridden
+  assert.equal(cloned.clonedFrom, original.id);
+});
+
+test('clone returns undefined for non-existent campaign', async () => {
+  const repository = await setupTestRepository();
+
+  const cloned = repository.clone('99999');
+  assert.equal(cloned, undefined);
+});
+
+test('clone generates unique slug for cloned campaign', async () => {
+  const repository = await setupTestRepository();
+
+  const original = repository.create({
+    name: 'Test Campaign',
+    slug: 'test-campaign',
+    rewardPerAction: 10,
+  });
+
+  const cloned = repository.clone(original.id);
+
+  assert.ok(cloned);
+  assert.notEqual(cloned.slug, original.slug);
+  assert.equal(cloned.slug, 'copy-of-test-campaign');
 });
 
