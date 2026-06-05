@@ -597,12 +597,20 @@ fn test_deregister_success_and_re_register() {
             &env,
             (
                 contract_id.clone(),
-                vec![&env, register_event.into_val(&env), participant.clone().into_val(&env)],
+                vec![
+                    &env,
+                    register_event.into_val(&env),
+                    participant.clone().into_val(&env)
+                ],
                 ().into_val(&env)
             ),
             (
                 contract_id.clone(),
-                vec![&env, deregister_event.into_val(&env), participant.clone().into_val(&env)],
+                vec![
+                    &env,
+                    deregister_event.into_val(&env),
+                    participant.clone().into_val(&env)
+                ],
                 ().into_val(&env)
             )
         ]
@@ -643,12 +651,20 @@ fn test_admin_deregister() {
             &env,
             (
                 contract_id.clone(),
-                vec![&env, register_event.into_val(&env), participant.clone().into_val(&env)],
+                vec![
+                    &env,
+                    register_event.into_val(&env),
+                    participant.clone().into_val(&env)
+                ],
                 ().into_val(&env)
             ),
             (
                 contract_id.clone(),
-                vec![&env, deregister_event.into_val(&env), participant.clone().into_val(&env)],
+                vec![
+                    &env,
+                    deregister_event.into_val(&env),
+                    participant.clone().into_val(&env)
+                ],
                 ().into_val(&env)
             )
         ]
@@ -794,7 +810,6 @@ fn test_deregister_clears_persistent_and_keeps_aggregate_count_consistent() {
     assert_eq!(client.get_participant_count(), 1);
 }
 
-
 // ── 2-step admin transfer (issue #281) ───────────────────────────────────────
 
 fn setup_admin_rotation_campaign() -> (Env, CampaignContractClient<'static>, Address, Address) {
@@ -912,7 +927,11 @@ fn test_register_with_valid_referrer_records_edge_and_emits_event() {
             &env,
             (
                 contract_id.clone(),
-                vec![&env, REGISTER_EVENT.into_val(&env), referee.clone().into_val(&env)],
+                vec![
+                    &env,
+                    REGISTER_EVENT.into_val(&env),
+                    referee.clone().into_val(&env)
+                ],
                 ().into_val(&env)
             ),
             (
