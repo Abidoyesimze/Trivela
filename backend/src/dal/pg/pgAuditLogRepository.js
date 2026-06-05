@@ -19,14 +19,7 @@ function rowToAuditLog(row) {
  * @param {{ pool: import('pg').Pool }} opts
  */
 export function createPgAuditLogRepository({ pool }) {
-  async function create({
-    actor,
-    action,
-    entity,
-    entityId = null,
-    diff = null,
-    timestamp = null,
-  }) {
+  async function create({ actor, action, entity, entityId = null, diff = null, timestamp = null }) {
     const createdAt = timestamp ?? new Date().toISOString();
     const { rows } = await pool.query(
       `
@@ -58,10 +51,7 @@ export function createPgAuditLogRepository({ pool }) {
     }
 
     const where = filters.length > 0 ? `WHERE ${filters.join(' AND ')}` : '';
-    const { rows } = await pool.query(
-      `SELECT * FROM audit_logs ${where} ORDER BY id DESC`,
-      params,
-    );
+    const { rows } = await pool.query(`SELECT * FROM audit_logs ${where} ORDER BY id DESC`, params);
     return rows.map(rowToAuditLog);
   }
 

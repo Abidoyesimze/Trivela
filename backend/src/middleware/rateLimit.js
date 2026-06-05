@@ -18,9 +18,7 @@ function createMemoryStore() {
       const now = Date.now();
       const existing = buckets.get(key);
       const bucket =
-        existing && existing.resetAt > now
-          ? existing
-          : { count: 0, resetAt: now + windowMs };
+        existing && existing.resetAt > now ? existing : { count: 0, resetAt: now + windowMs };
 
       bucket.count += 1;
       buckets.set(key, bucket);
@@ -40,11 +38,7 @@ function createRedisStore(redisClient) {
       const now = Date.now();
       const resetAt = now + windowMs;
 
-      const results = await redisClient
-        .multi()
-        .incr(redisKey)
-        .pttl(redisKey)
-        .exec();
+      const results = await redisClient.multi().incr(redisKey).pttl(redisKey).exec();
 
       if (!results || results[0]?.[0]) {
         throw new Error('Redis rate limit increment failed');

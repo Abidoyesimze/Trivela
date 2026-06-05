@@ -50,9 +50,7 @@ function appliedVersions(db) {
  */
 export async function runMigrations(db) {
   const entries = await readdir(MIGRATIONS_DIR);
-  const files = entries
-    .filter((f) => f.endsWith('.js'))
-    .sort(); // lexicographic — NNN_ prefix keeps them in order
+  const files = entries.filter((f) => f.endsWith('.js')).sort(); // lexicographic — NNN_ prefix keeps them in order
 
   const applied = appliedVersions(db);
   const ran = [];

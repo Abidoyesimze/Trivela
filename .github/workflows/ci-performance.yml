@@ -126,4 +126,6 @@ jobs:
         run: cargo test --workspace
 
       - name: Build WASM artifacts
-        run: cargo build --target wasm32-unknown-unknown --release -p trivela-rewards-contract -p trivela-campaign-contract
+        run:
+          cargo build --target wasm32-unknown-unknown --release -p trivela-rewards-contract -p
+          trivela-campaign-contract

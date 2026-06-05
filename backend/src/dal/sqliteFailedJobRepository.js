@@ -67,9 +67,7 @@ export function createSqliteFailedJobRepository({ db }) {
   function record(entry) {
     const id = entry.id ?? randomUUID();
     const payload =
-      entry.payload === undefined || entry.payload === null
-        ? null
-        : JSON.stringify(entry.payload);
+      entry.payload === undefined || entry.payload === null ? null : JSON.stringify(entry.payload);
     insertStmt.run(
       id,
       entry.type,
