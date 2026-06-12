@@ -17,10 +17,10 @@ contributors.
 Both contracts are **deployed and live on Stellar Testnet**, built from the latest `main` and
 verified end-to-end (initialize → credit/balance, initialize → register/participant-count).
 
-| Contract            | Contract ID (Testnet)                                      | Explorer                                                                                                          |
-| ------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Rewards**         | `CB6KYDQ7X2V5B46FU7FKZCRCK5ZEYCHRUHZPVF73RA5M5AAUUBQA6IXZ` | [View ↗](https://stellar.expert/explorer/testnet/contract/CB6KYDQ7X2V5B46FU7FKZCRCK5ZEYCHRUHZPVF73RA5M5AAUUBQA6IXZ) |
-| **Campaign**        | `CDDVJVHP6PUYWB42VQJ6YC7GEUQR622JEE5MY65ZIKUETGDT33QZPBQH` | [View ↗](https://stellar.expert/explorer/testnet/contract/CDDVJVHP6PUYWB42VQJ6YC7GEUQR622JEE5MY65ZIKUETGDT33QZPBQH) |
+| Contract     | Contract ID (Testnet)                                      | Explorer                                                                                                            |
+| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Rewards**  | `CB6KYDQ7X2V5B46FU7FKZCRCK5ZEYCHRUHZPVF73RA5M5AAUUBQA6IXZ` | [View ↗](https://stellar.expert/explorer/testnet/contract/CB6KYDQ7X2V5B46FU7FKZCRCK5ZEYCHRUHZPVF73RA5M5AAUUBQA6IXZ) |
+| **Campaign** | `CDDVJVHP6PUYWB42VQJ6YC7GEUQR622JEE5MY65ZIKUETGDT33QZPBQH` | [View ↗](https://stellar.expert/explorer/testnet/contract/CDDVJVHP6PUYWB42VQJ6YC7GEUQR622JEE5MY65ZIKUETGDT33QZPBQH) |
 
 - **Network:** Stellar Testnet (`Test SDF Network ; September 2015`)
 - **Deployer (public key):** `GA4S5DDI3M3H37IDZIK422IH7WPBECOATLAOYPKOJFLBYTKHU2BB4M6P`
