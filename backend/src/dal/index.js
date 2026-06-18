@@ -12,6 +12,7 @@ import { createSqliteReferralRepository } from './sqliteReferralRepository.js';
 import { assertApiKeyRepository } from './apiKeyRepository.js';
 import { createSqliteApiKeyRepository } from './sqliteApiKeyRepository.js';
 import { createSqliteFailedJobRepository } from './sqliteFailedJobRepository.js';
+import { createSqliteVariantRepository } from './sqliteVariantRepository.js';
 import { createPool, isPostgresUrl } from './pg/pgClient.js';
 import { createSqliteAllowlistRepository } from './sqliteAllowlistRepository.js';
 
@@ -77,6 +78,7 @@ export async function createDal({
     ),
     webhooks: webhookRepository ?? new WebhookRepository(db),
     referrals: createSqliteReferralRepository({ db }),
+    variants: createSqliteVariantRepository({ db }),
     apiKeys: assertApiKeyRepository(apiKeyRepository ?? createSqliteApiKeyRepository({ db })),
     failedJobs: failedJobRepository ?? createSqliteFailedJobRepository({ db }),
     allowlists: allowlistRepository ?? createSqliteAllowlistRepository({ db }),

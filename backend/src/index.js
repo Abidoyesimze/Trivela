@@ -48,6 +48,8 @@ import { buildCampaignStats } from './services/campaignStatsService.js';
 import { generateAllowlist } from './lib/allowlist/merkle.js';
 import { parseAllowlistCsv, validateGAddress, MAX_ALLOWLIST_ROWS } from './lib/allowlist/csv.js';
 import { createEmbedRoute } from './routes/embed.js';
+import { createVariantRoutes } from './routes/variants.js';
+import { createVariantService } from './services/variantService.js';
 
 const DEFAULT_PORT = 3001;
 const DEFAULT_RATE_LIMIT_WINDOW_MS = 60_000;
@@ -214,6 +216,7 @@ export async function createApp(options = {}) {
   const auditLogRepository = dal.auditLogs;
   const webhookRepository = dal.webhooks;
   const referralRepository = dal.referrals;
+  const variantRepository = dal.variants;
   const apiKeyRepository = dal.apiKeys;
   const failedJobRepository = options.failedJobRepository ?? dal.failedJobs;
   const allowlistRepository = dal.allowlists;
@@ -229,6 +232,7 @@ export async function createApp(options = {}) {
     fetchImpl,
     logger: log,
   });
+  const variantService = createVariantService({ variantRepo: variantRepository });
   const shortCacheTtlMs = normalizePositiveInteger(
     /** @type {any} */ (options.shortCacheTtlMs) ?? process.env.SHORT_CACHE_TTL_MS,
     DEFAULT_SHORT_CACHE_TTL_MS,
@@ -1449,6 +1453,14 @@ export async function createApp(options = {}) {
         bonusEarned,
       });
     });
+
+    // Variant routes for A/B testing (Issue #624)
+    const variantRouter = createVariantRoutes({
+      variantRepo: variantRepository,
+      variantService,
+      campaignRepo: campaignRepository,
+    });
+    app.use(prefix, rateLimiter, requireApiKey, variantRouter);
   }
 
   registerApiRoutes(API_V1_PREFIX);
