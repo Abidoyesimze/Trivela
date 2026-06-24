@@ -1684,8 +1684,7 @@ export async function createApp(options = {}) {
   // Dynamic sitemap.xml for SEO — lists all public (non-hidden, active) campaign pages
   app.get('/sitemap.xml', rateLimiter, (req, res) => {
     const siteUrl =
-      (process.env.SITE_URL || '').replace(/\/+$/, '') ||
-      `${req.protocol}://${req.get('host')}`;
+      (process.env.SITE_URL || '').replace(/\/+$/, '') || `${req.protocol}://${req.get('host')}`;
 
     const staticPaths = ['/', '/explore', '/about'];
     const campaigns = campaignRepository.list({ active: true });

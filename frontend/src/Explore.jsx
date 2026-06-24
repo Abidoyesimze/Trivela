@@ -58,9 +58,7 @@ function CampaignRail({ title, campaigns, isLoading, emptyText }) {
           </li>
         ))}
       </ul>
-      {emptyText && campaigns.length === 0 && (
-        <p className="explore-rail-empty">{emptyText}</p>
-      )}
+      {emptyText && campaigns.length === 0 && <p className="explore-rail-empty">{emptyText}</p>}
     </div>
   );
 }
@@ -246,11 +244,7 @@ export default function Explore({
           isLoading={isTrendingLoading}
         />
 
-        <CampaignRail
-          title="New"
-          campaigns={newCampaigns}
-          isLoading={isNewLoading}
-        />
+        <CampaignRail title="New" campaigns={newCampaigns} isLoading={isNewLoading} />
 
         <section className="explore-section" aria-labelledby="explore-all-title">
           <div className="explore-section-header">
@@ -353,7 +347,9 @@ export default function Explore({
                 )}
                 {otherCampaigns.length > 0 && (
                   <>
-                    <h3 className={featuredCampaigns.length > 0 ? 'all-campaigns-title' : 'sr-only'}>
+                    <h3
+                      className={featuredCampaigns.length > 0 ? 'all-campaigns-title' : 'sr-only'}
+                    >
                       All Campaigns
                     </h3>
                     <ul className="campaigns-grid">
