@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import CreateCampaign from './CreateCampaign';
+import AuditLog from './components/AuditLog';
 import { apiClient } from './lib/apiClient';
 import { logSafeEvent } from './lib/safeAnalytics';
 import './Landing.css';
@@ -79,6 +80,13 @@ export default function AdminCampaigns({
           ) : null}
 
           <CreateCampaign campaigns={campaigns} onCampaignCreated={loadCampaigns} />
+        </section>
+
+        <section
+          className="section"
+          style={{ marginTop: 0, paddingTop: 0 }}
+        >
+          <AuditLog />
         </section>
       </main>
     </div>

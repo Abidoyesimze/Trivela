@@ -1,4 +1,5 @@
 import DevNetworkSwitcher from './DevNetworkSwitcher';
+import NotificationCenter from './NotificationCenter';
 
 function truncateWalletAddress(walletAddress) {
   if (!walletAddress) return '';
@@ -7,8 +8,9 @@ function truncateWalletAddress(walletAddress) {
 }
 
 const NAV_LINKS = [
+  { href: '/analytics', label: 'Analytics' },
+  { href: '/notification-settings', label: 'Notifications' },
   { href: 'https://github.com/FinesseStudioLab/Trivela', label: 'GitHub' },
-  { href: 'https://github.com/FinesseStudioLab/Trivela/issues', label: 'Contribute' },
   { href: 'https://developers.stellar.org/docs', label: 'Stellar' },
 ];
 
@@ -39,14 +41,22 @@ export default function Header({
 
         <div className="nav-actions">
           <div className="nav-links">
-            {NAV_LINKS.map((link) => (
-              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
-                {link.label}
-              </a>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isExternal = link.href.startsWith('http');
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
 
           <div className="nav-utilities">
+            <NotificationCenter />
             <DevNetworkSwitcher network={stellarNetwork} onChange={onChangeStellarNetwork} />
 
             {walletAddress && (
