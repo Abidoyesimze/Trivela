@@ -1185,6 +1185,12 @@ export async function createApp(options = {}) {
   }
 
   /** @param {import('express').Request} _req @param {import('express').Response} res */
+  function verifyAuditChain(_req, res) {
+    const result = auditLogRepository.verify();
+    return res.status(result.valid ? 200 : 409).json(result);
+  }
+
+  /** @param {import('express').Request} _req @param {import('express').Response} res */
   function getIndexerCursorState(_req, res) {
     return res.json({
       cursor: indexerCursorState.cursor,
@@ -1495,6 +1501,7 @@ export async function createApp(options = {}) {
     app.get(`${prefix}/campaigns/:id`, rateLimiter, getCampaignById);
     app.get(`${prefix}/campaigns/:id/stats`, rateLimiter, getCampaignStats);
     app.get(`${prefix}/audit-logs`, rateLimiter, ...guard, listAuditLogs);
+    app.get(`${prefix}/admin/audit/verify`, rateLimiter, requireMasterKey, verifyAuditChain);
     app.get(`${prefix}/indexer/cursor`, rateLimiter, getIndexerCursorState);
     app.post(`${prefix}/indexer/cursor`, rateLimiter, ...guard, setIndexerCursorState);
     app.post(`${prefix}/campaigns`, rateLimiter, ...guard, createCampaign);
