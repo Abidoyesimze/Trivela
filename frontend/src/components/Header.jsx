@@ -159,6 +159,16 @@ export default function Header({
             ))}
             {walletAddress && (
               <a
+                href="/profile"
+                className={pathname === '/profile' ? 'nav-link-active' : undefined}
+                aria-current={pathname === '/profile' ? 'page' : undefined}
+                onClick={closeMenu}
+              >
+                Profile
+              </a>
+            )}
+            {walletAddress && (
+              <a
                 href="/history"
                 className={pathname === '/history' ? 'nav-link-active' : undefined}
                 aria-current={pathname === '/history' ? 'page' : undefined}
